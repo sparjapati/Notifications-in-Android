@@ -7,8 +7,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.SystemClock
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,6 +20,7 @@ import androidx.core.app.RemoteInput
 import androidx.core.graphics.drawable.IconCompat
 import com.notificationsInAndroid.databinding.ActivityMainBinding
 import com.notificationsInAndroid.utils.Constants
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -104,6 +108,11 @@ class MainActivity : AppCompatActivity() {
     private fun setOnClickListener() {
 
         binding.btnChannel1.setOnClickListener {
+            if (!notificationManager.areNotificationsEnabled())
+                openNotificationSettings()
+            else if (isChannelBlocked(Constants.CHANNEL_1_ID))
+                openChannelSettings(Constants.CHANNEL_1_ID)
+
             // create intent for action in notification
             val intent = Intent(this, MainActivity::class.java)
 
@@ -157,6 +166,10 @@ class MainActivity : AppCompatActivity() {
             sendNotification(1, notification)
         }
         binding.btnChannel2.setOnClickListener {
+            if (!notificationManager.areNotificationsEnabled())
+                openNotificationSettings()
+            else if (isChannelBlocked(Constants.CHANNEL_2_ID))
+                openChannelSettings(Constants.CHANNEL_2_ID)
             SystemClock.sleep(2000)
 
             val notification1 = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
@@ -221,4 +234,34 @@ class MainActivity : AppCompatActivity() {
         notificationManager.notify(id, notification)
     }
 
+    private fun openNotificationSettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        } else {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        }
+    }
+
+    private fun isChannelBlocked(channelId: String): Boolean {
+        if (channelId.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = notificationManager.getNotificationChannel(channelId)
+            return channel != null && channel.importance == NotificationManager.IMPORTANCE_NONE
+        }
+        return false
+    }
+
+    private fun openChannelSettings(channelId: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isChannelBlocked(Constants.CHANNEL_1_ID)) {
+            val intent = Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+            intent.putExtra(Settings.EXTRA_CHANNEL_ID, channelId)
+            startActivity(intent)
+        } else
+            openNotificationSettings()
+    }
 }
