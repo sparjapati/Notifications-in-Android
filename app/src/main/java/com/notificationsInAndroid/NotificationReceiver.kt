@@ -4,17 +4,22 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import androidx.core.app.RemoteInput
 import com.notificationsInAndroid.utils.Constants
 import com.notificationsInAndroid.utils.Constants.TAG
-import com.notificationsInAndroid.utils.toast
 
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        try {
-            val message = intent?.getStringExtra(Constants.KEY_MESSAGE)!!
-            message.toast(context!!)
-        } catch (e: Exception) {
-            Log.d(TAG, "onReceive: ${e.message}")
+        val remoteInput = RemoteInput.getResultsFromIntent(intent)
+        if (remoteInput != null) {
+            val replyText = remoteInput.getCharSequence(Constants.KEY_REMOTE_INPUT)!!
+            val message = Message(replyText, null)
+//            Log.d(TAG, "onReceive: $message")
+            MainActivity.MESSAGES.add(message)
+            MainActivity.MESSAGES.add(Message("fusvfhsv", "abc"))
+            MainActivity.updateNotification(context!!)
+        } else {
+            Log.d(TAG, "onReceive: null intent")
         }
     }
 }
