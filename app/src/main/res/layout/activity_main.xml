@@ -10,17 +10,51 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
         tools:context=".MainActivity">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/et_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
+            android:hint="@string/title"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/et_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
+            android:padding="5dp"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_channel1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/send_on_channel1" />
+
+        <Button
+            android:id="@+id/btn_channel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/send_on_channel2" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
