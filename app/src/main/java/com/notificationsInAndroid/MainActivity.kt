@@ -6,10 +6,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.media.session.MediaSessionCompat
+import android.os.SystemClock
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -24,9 +23,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(this)
-    }
-    private val mediaSession: MediaSessionCompat by lazy {
-        MediaSessionCompat(this, Constants.TAG)
     }
 
     companion object {
@@ -161,27 +157,32 @@ class MainActivity : AppCompatActivity() {
             sendNotification(1, notification)
         }
         binding.btnChannel2.setOnClickListener {
-            val artwork = BitmapFactory.decodeResource(resources, R.drawable.image)
 
-            val notification = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+            val notificationBuilder = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_two)
-                .setContentTitle(binding.etTitle.text)
-                .setContentText(binding.etDesc.text)
-                .setLargeIcon(artwork)
-                .addAction(R.drawable.ic_previous, "Previous", null)
-                .addAction(R.drawable.ic_play, "Play/Pause", null)
-                .addAction(R.drawable.ic_next, "Next", null)
-                .addAction(R.drawable.ic_backup, "Backup", null)
-                .addAction(R.drawable.ic_bluetooth, "bluetooth", null)
-                .setStyle(
-                    androidx.media.app.NotificationCompat.MediaStyle()
-                        .setShowActionsInCompactView(1, 2, 3)
-                        .setShowCancelButton(false)
-                        .setMediaSession(mediaSession.sessionToken)
-                ).setSubText("Subtext")
+                .setContentTitle("Downloads")
+                .setContentText("Downloads in progress")
+                .setProgress(Constants.MAX_PROGRESS, 0, false)
+                .setOnlyAlertOnce(true)
+                .setOngoing(true)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build()
-            sendNotification(2, notification)
+
+            notificationManager.notify(2, notificationBuilder.build())
+
+            Thread {
+                Thread.sleep(2000)
+                var progress = 0
+                while (progress < Constants.MAX_PROGRESS) {
+                    progress+=10
+                    notificationBuilder.setProgress(Constants.MAX_PROGRESS, progress, false)
+                    notificationManager.notify(2, notificationBuilder.build())
+                    Thread.sleep(1500)
+                }
+                notificationBuilder.setContentText("Download Finished")
+                    .setProgress(0, 0, false)
+                    .setOngoing(false)
+                notificationManager.notify(2, notificationBuilder.build())
+            }
         }
     }
 
