@@ -3,12 +3,14 @@ package com.notificationsInAndroid
 import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.notificationsInAndroid.databinding.ActivityMainBinding
+import com.notificationsInAndroid.utils.Constants
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,11 +45,22 @@ class MainActivity : AppCompatActivity() {
         broadcastIntent.putExtra(Constants.KEY_MESSAGE, binding.etDesc.text)
         val actionIntent = PendingIntent.getBroadcast(this, 2, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
+        val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.image)
+
         binding.btnChannel1.setOnClickListener {
             val notification = NotificationCompat.Builder(this, Constants.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(binding.etTitle.text)
                 .setContentText(binding.etDesc.text)
+                .setLargeIcon(largeIcon)
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .bigText(
+                            getString(R.string.big_text)
+                        )
+                        .setBigContentTitle("Big content title")
+                        .setSummaryText("Summary text")
+                )
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(Color.CYAN)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -63,6 +76,14 @@ class MainActivity : AppCompatActivity() {
                 .setSmallIcon(R.drawable.ic_two)
                 .setContentTitle(binding.etTitle.text)
                 .setContentText(binding.etDesc.text)
+                .setStyle(
+                    NotificationCompat.InboxStyle()
+                        .addLine("Line 1")
+                        .addLine("Line 2")
+                        .addLine("Line 3")
+                        .setBigContentTitle("Big content title")
+                        .setSummaryText("Summary text")
+                )
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build()
             sendNotification(2, notification)
