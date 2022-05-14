@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.support.v4.media.session.MediaSessionCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -17,6 +18,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val notificationManager: NotificationManagerCompat by lazy {
         NotificationManagerCompat.from(this)
+    }
+    private val mediaSession: MediaSessionCompat by lazy {
+        MediaSessionCompat(this, Constants.TAG)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,21 +49,20 @@ class MainActivity : AppCompatActivity() {
         broadcastIntent.putExtra(Constants.KEY_MESSAGE, binding.etDesc.text)
         val actionIntent = PendingIntent.getBroadcast(this, 2, broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val largeIcon = BitmapFactory.decodeResource(resources, R.drawable.image)
+        val picture = BitmapFactory.decodeResource(resources, R.drawable.image)
 
         binding.btnChannel1.setOnClickListener {
             val notification = NotificationCompat.Builder(this, Constants.CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_one)
                 .setContentTitle(binding.etTitle.text)
                 .setContentText(binding.etDesc.text)
-                .setLargeIcon(largeIcon)
+                .setLargeIcon(picture)
                 .setStyle(
-                    NotificationCompat.BigTextStyle()
-                        .bigText(
-                            getString(R.string.big_text)
-                        )
-                        .setBigContentTitle("Big content title")
-                        .setSummaryText("Summary text")
+                    NotificationCompat.BigPictureStyle()
+                        .bigLargeIcon(null)
+                        .bigPicture(picture)
+                        .setBigContentTitle("Big Content title")
+                        .setSummaryText("Summary")
                 )
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setColor(Color.CYAN)
@@ -72,18 +75,24 @@ class MainActivity : AppCompatActivity() {
             sendNotification(1, notification)
         }
         binding.btnChannel2.setOnClickListener {
+            val artwork = BitmapFactory.decodeResource(resources, R.drawable.image)
+
             val notification = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_two)
                 .setContentTitle(binding.etTitle.text)
                 .setContentText(binding.etDesc.text)
+                .setLargeIcon(artwork)
+                .addAction(R.drawable.ic_previous, "Previous", null)
+                .addAction(R.drawable.ic_play, "Play/Pause", null)
+                .addAction(R.drawable.ic_next, "Next", null)
+                .addAction(R.drawable.ic_backup, "Backup", null)
+                .addAction(R.drawable.ic_bluetooth, "bluetooth", null)
                 .setStyle(
-                    NotificationCompat.InboxStyle()
-                        .addLine("Line 1")
-                        .addLine("Line 2")
-                        .addLine("Line 3")
-                        .setBigContentTitle("Big content title")
-                        .setSummaryText("Summary text")
-                )
+                    androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(1, 2, 3)
+                        .setShowCancelButton(false)
+                        .setMediaSession(mediaSession.sessionToken )
+                ).setSubText("Subtext")
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build()
             sendNotification(2, notification)
