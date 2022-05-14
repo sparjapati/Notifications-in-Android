@@ -157,32 +157,62 @@ class MainActivity : AppCompatActivity() {
             sendNotification(1, notification)
         }
         binding.btnChannel2.setOnClickListener {
+            SystemClock.sleep(2000)
 
-            val notificationBuilder = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+            val notification1 = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
                 .setSmallIcon(R.drawable.ic_two)
-                .setContentTitle("Downloads")
-                .setContentText("Downloads in progress")
-                .setProgress(Constants.MAX_PROGRESS, 0, false)
-                .setOnlyAlertOnce(true)
-                .setOngoing(true)
+                .setContentTitle("title1")
+                .setContentText("message1")
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setGroup(Constants.GROUP)
+                .build()
+            sendNotification(2, notification1)
+            SystemClock.sleep(2000)
 
-            notificationManager.notify(2, notificationBuilder.build())
+            val notification2 = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_two)
+                .setContentTitle("title2")
+                .setContentText("message2")
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setGroup(Constants.GROUP)
+                .build()
+            sendNotification(3, notification2)
+            SystemClock.sleep(2000)
 
-            Thread {
-                Thread.sleep(2000)
-                var progress = 0
-                while (progress < Constants.MAX_PROGRESS) {
-                    progress+=10
-                    notificationBuilder.setProgress(Constants.MAX_PROGRESS, progress, false)
-                    notificationManager.notify(2, notificationBuilder.build())
-                    Thread.sleep(1500)
-                }
-                notificationBuilder.setContentText("Download Finished")
-                    .setProgress(0, 0, false)
-                    .setOngoing(false)
-                notificationManager.notify(2, notificationBuilder.build())
-            }
+            val notification3 = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_two)
+                .setContentTitle("title3")
+                .setContentText("message3")
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setGroup(Constants.GROUP)
+                .build()
+            sendNotification(4, notification3)
+            SystemClock.sleep(2000)
+
+            val notification4 = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_two)
+                .setContentTitle("title4")
+                .setContentText("message4")
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setGroup(Constants.GROUP)
+                .build()
+            sendNotification(5, notification4)
+
+            val summaryNotification = NotificationCompat.Builder(this, Constants.CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_user)
+                .setStyle(
+                    NotificationCompat.InboxStyle()
+                        .addLine("line 1")
+                        .addLine("line 2")
+                        .addLine("line 3")
+                        .setSummaryText("Summary")
+                )
+                .setGroupSummary(true)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                .setGroup(Constants.GROUP)
+                .build()
+            sendNotification(5, summaryNotification)
         }
     }
 
