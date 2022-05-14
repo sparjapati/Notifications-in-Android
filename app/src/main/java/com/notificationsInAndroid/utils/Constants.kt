@@ -7,4 +7,5 @@ object Constants {
     const val CHANNEL_2_ID = "channel2"
     const val KEY_MESSAGE = "key_message"
     const val MAX_PROGRESS = 100
+    const val GROUP = "group"
 }
