@@ -1,8 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Notifications in Android</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
-    <string name="send_on_channel1">Send on Channel1</string>
+    <string name="send_on_channel1" tools:ignore="Typos">Send on Channel1</string>
     <string name="send_on_channel2">Send on Channel2</string>
     <string name="channel1_desc">This is channel 1</string>
     <string name="channel2_desc">This is channel 2</string>

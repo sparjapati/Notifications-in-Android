@@ -18,7 +18,7 @@ class App : Application() {
             val channel1 = NotificationChannel(
                 Constants.CHANNEL_1_ID,
                 "channel1",
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_HIGH
             )
             channel1.description = getString(R.string.channel1_desc)
             /*
